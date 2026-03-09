@@ -238,8 +238,6 @@ single-pass updates.
 
 ## Practical Completion Checklist
 
-Use this checklist to decide when a run is truly "finished":
-
 - training process completed target iterations or intentional early stop
 - final checkpoint saved (not only `best_model`)
 - benchmark evaluation executed on final and best checkpoints
