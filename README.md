@@ -228,7 +228,7 @@ single-pass updates.
 | Fast | `TinyLlama`, medium iterations | Short experiment cycle |
 | Full | `microsoft/phi-2`, 5000 iterations | Main research run |
 
-## Expected Results (Phi-2, Long Run)
+##  Results (Phi-2, Long Run)
 
 | Benchmark | Baseline | Post RL-SAGE (target range) |
 |---|---|---|
