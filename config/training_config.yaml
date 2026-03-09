@@ -1,0 +1,153 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# RL-SAGE Training Configuration
+# Designed for single GPU with 6 GB VRAM
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Model ───────────────────────────────────────────────────────────────────
+model:
+  base_model: "microsoft/phi-2"       # Primary: Phi-2 (2.7B)
+  # base_model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"   # Fallback: TinyLlama
+  # base_model: "distilgpt2"           # Debug only
+
+  # 4-bit quantization (QLoRA)
+  quantization:
+    enabled: true
+    bits: 4
+    quant_type: "nf4"                 # NormalFloat4 for weight accuracy
+    double_quant: true                # Further quantize quantization constants
+    compute_dtype: "float16"          # fp16 for compute
+
+  # LoRA adapter
+  lora:
+    enabled: true
+    r: 16                             # LoRA rank
+    alpha: 32                         # Scaling factor (alpha/r = 2)
+    dropout: 0.05
+    bias: "none"
+    target_modules:
+      - "q_proj"
+      - "k_proj"
+      - "v_proj"
+      - "dense"
+
+  # Memory optimizations
+  gradient_checkpointing: true
+  device_map: "auto"
+
+# ─── Training ────────────────────────────────────────────────────────────────
+training:
+  total_iterations: 5000
+  rollout_size: 32                    # Trajectories collected per iteration
+  update_batch_size: 16              # Trajectories per PPO mini-batch
+  gradient_accumulation_steps: 8     # Effective gradient batch size
+  ppo_epochs: 4                      # PPO update epochs per collected batch
+  max_seq_length: 512                 # Hard token limit (VRAM constraint)
+  max_new_tokens: 256                 # Max generation tokens per response
+
+  # Optimizer
+  learning_rate: 1.0e-5
+  weight_decay: 0.01
+  warmup_steps: 100
+  optimizer: "paged_adamw_8bit"       # CPU-paged optimizer (bitsandbytes)
+
+  # Precision
+  fp16: true
+  bf16: false                         # Use bf16 if on Ampere+ GPU
+
+  # Replay buffer
+  replay_buffer_capacity: 512
+  replay_buffer_alpha: 0.6           # Prioritized experience replay alpha
+
+# ─── PPO Hyperparameters ─────────────────────────────────────────────────────
+ppo:
+  epsilon: 0.2                        # Clip ratio
+  value_coeff: 0.5                    # c1 — value loss weight
+  entropy_coeff: 0.01                 # c2 — entropy bonus
+  kl_penalty: 0.1                     # Beta — KL divergence penalty
+  lam: 0.95                           # GAE lambda
+  gamma: 1.0                          # Discount factor (1.0 = no discounting)
+  vf_clip: 0.2                        # Value function clipping
+  max_grad_norm: 0.5                  # Gradient clipping
+
+# ─── Reward ──────────────────────────────────────────────────────────────────
+reward:
+  alpha_correctness: 0.70             # Weight for answer correctness
+  alpha_reasoning:   0.20             # Weight for reasoning quality (DeBERTa)
+  alpha_diversity:   0.05             # Weight for solution diversity
+  difficulty_bonus:  0.30             # Max bonus multiplier for hard tasks
+  wrong_answer_penalty: -0.5         # Reward for incorrect answers
+
+  # Anti-reward-hacking
+  max_reward_clip: 1.5               # Clip rewards above this value
+  normalize_rewards: true            # Z-score normalize per batch
+
+# ─── Generation ──────────────────────────────────────────────────────────────
+generation:
+  temperature: 0.7
+  top_p: 0.95
+  repetition_penalty: 1.2
+  do_sample: true
+
+# ─── Curriculum ──────────────────────────────────────────────────────────────
+curriculum:
+  initial_difficulty: 0.2
+  difficulty_step: 0.05
+  success_threshold_up: 0.75         # Increase difficulty if above this
+  success_threshold_down: 0.40       # Decrease difficulty if below this
+  window_size: 50                    # Recent tasks to compute success rate
+  topics:
+    - "arithmetic"
+    - "algebra"
+    - "word_problems"
+    - "geometry"
+    - "commonsense"
+    - "logic"
+    - "science"
+
+# ─── Datasets ────────────────────────────────────────────────────────────────
+datasets:
+  gsm8k:
+    path: "openai/gsm8k"
+    split: "main"
+    seed_examples: 50                # Used for task generator seeding
+  arc:
+    path: "allenai/ai2_arc"
+    config: "ARC-Easy"              # Start easy; ARC-Challenge after diff > 0.6
+  humaneval:
+    path: "openai_humaneval"
+    enabled: false                   # Enable only when code reasoning is active
+
+# ─── Evaluation ──────────────────────────────────────────────────────────────
+evaluation:
+  benchmarks:
+    - name: "gsm8k"
+      n_samples: 200
+      decode: "greedy"
+    - name: "arc_easy"
+      n_samples: 200
+      decode: "greedy"
+    - name: "arc_challenge"
+      n_samples: 100
+      decode: "greedy"
+  holdout_tasks: 50                  # Tasks generated at iter 0, never trained on
+
+# ─── Logging ─────────────────────────────────────────────────────────────────
+logging:
+  log_every: 10                      # Training metrics every N iterations
+  eval_every: 100                    # Full benchmark eval every N iterations
+  checkpoint_every: 500              # Save checkpoint every N iterations
+  checkpoint_dir: "checkpoints/"
+  use_wandb: true
+  wandb_project: "rl-sage"
+  wandb_tags:
+    - "phi2"
+    - "ppo"
+    - "self-improving"
+    - "6gb-vram"
+  use_tensorboard: false
+
+# ─── Reasoning Scorer ────────────────────────────────────────────────────────
+reasoning_scorer:
+  model: "cross-encoder/nli-deberta-v3-small"  # CPU-resident
+  device: "cpu"
+  batch_size: 8

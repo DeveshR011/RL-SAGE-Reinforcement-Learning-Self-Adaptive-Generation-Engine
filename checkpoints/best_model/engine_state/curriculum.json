@@ -1,0 +1,42 @@
+{
+  "iteration": 104,
+  "topic_diff": {
+    "arithmetic": 0.2286474508437579,
+    "algebra": 0.2286474508437579,
+    "word_problems": 0.2286474508437579,
+    "geometry": 0.2286474508437579,
+    "commonsense": 0.2286474508437579,
+    "logic": 0.2286474508437579,
+    "science": 0.2286474508437579
+  },
+  "records": {
+    "arithmetic": {
+      "n_correct": 0,
+      "n_total": 15
+    },
+    "algebra": {
+      "n_correct": 0,
+      "n_total": 17
+    },
+    "word_problems": {
+      "n_correct": 0,
+      "n_total": 12
+    },
+    "geometry": {
+      "n_correct": 0,
+      "n_total": 14
+    },
+    "commonsense": {
+      "n_correct": 0,
+      "n_total": 13
+    },
+    "logic": {
+      "n_correct": 0,
+      "n_total": 18
+    },
+    "science": {
+      "n_correct": 0,
+      "n_total": 15
+    }
+  }
+}

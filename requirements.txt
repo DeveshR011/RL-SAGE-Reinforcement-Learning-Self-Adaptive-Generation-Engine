@@ -1,0 +1,43 @@
+# RL-SAGE: Reinforcement Learning Self-Adaptive Generation Engine
+# Requirements — tested on Python 3.10+
+
+# ─── Core Deep Learning ───────────────────────────────────────────────────────
+torch>=2.9.0
+torchvision>=0.18.0
+
+# ─── Hugging Face Ecosystem ───────────────────────────────────────────────────
+transformers>=4.38.0
+peft>=0.9.0
+trl>=0.8.0
+accelerate>=0.28.0
+datasets>=2.18.0
+evaluate>=0.4.1
+huggingface_hub>=0.21.0
+
+# ─── Memory Efficiency ────────────────────────────────────────────────────────
+bitsandbytes==0.43.0
+
+# ─── Metrics & Evaluation ─────────────────────────────────────────────────────
+rouge-score>=0.1.2
+nltk>=3.8.1
+scipy>=1.10.0
+scikit-learn>=1.4.1
+
+# ─── Data & Utilities ─────────────────────────────────────────────────────────
+numpy>=1.26.0
+jsonlines>=4.0.0
+tqdm>=4.66.0
+pyyaml>=6.0.0
+omegaconf>=2.3.0
+
+# ─── Logging & Experiment Tracking ───────────────────────────────────────────
+wandb>=0.16.0
+tensorboard>=2.16.0
+
+# ─── Code Execution (HumanEval reward) ───────────────────────────────────────
+# NOTE: Code execution sandbox is isolated — only safe subprocesses
+psutil>=5.9.0
+
+# ─── Development Utilities ────────────────────────────────────────────────────
+rich>=13.7.0
+colorama>=0.4.0

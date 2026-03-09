@@ -1,0 +1,102 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+.installed.cfg
+lib/
+lib64/
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Jupyter ────────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── ML / Model weights (large binary files) ───────────────────────────────────
+# Checkpoint model weights — too large for GitHub (>100 MB)
+checkpoints/*/model.safetensors
+checkpoints/*/pytorch_model.bin
+checkpoints/*/pytorch_model-*.bin
+checkpoints/*/model-*.safetensors
+# Keep checkpoint metadata (config, tokenizer, engine state) but not raw weights
+!checkpoints/*/config.json
+!checkpoints/*/generation_config.json
+!checkpoints/*/tokenizer.json
+!checkpoints/*/tokenizer_config.json
+!checkpoints/*/tokenizer.model
+!checkpoints/*/special_tokens_map.json
+!checkpoints/*/engine_state/
+!checkpoints/README.txt
+
+# ── HuggingFace cache ──────────────────────────────────────────────────────────
+.cache/
+~/.cache/huggingface/
+
+# ── General large data files ───────────────────────────────────────────────────
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.parquet
+
+# ── Logs (keep directory, ignore log content) ─────────────────────────────────
+logs/*.jsonl
+logs/*.json
+logs/*.log
+logs/*.csv
+logs/*.png
+logs/*.pdf
+
+# ── Data downloads ─────────────────────────────────────────────────────────────
+data/gsm8k/
+data/arc/
+data/humaneval/
+
+# ── wandb ─────────────────────────────────────────────────────────────────────
+wandb/
+*.wandb
+
+# ── OS artefacts ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / editor ──────────────────────────────────────────────────────────────
+.vscode/settings.json
+.vscode/*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Secrets / credentials ─────────────────────────────────────────────────────
+.env
+*.env
+secrets.yaml
+secrets.json

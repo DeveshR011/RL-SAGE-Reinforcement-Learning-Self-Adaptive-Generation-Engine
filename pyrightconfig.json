@@ -1,0 +1,24 @@
+{
+  "pythonVersion": "3.10",
+  "typeCheckingMode": "basic",
+  "extraPaths": [
+    ".",
+    "src"
+  ],
+  "include": [
+    "src",
+    "scripts"
+  ],
+  "exclude": [
+    "checkpoints",
+    "logs",
+    "data",
+    ".venv",
+    "venv"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "none",
+  "reportGeneralTypeIssues": "warning",
+  "reportOptionalSubscript": "warning",
+  "reportUnboundVariable": "error"
+}
